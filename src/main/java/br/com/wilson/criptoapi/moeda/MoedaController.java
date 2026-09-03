@@ -9,25 +9,22 @@ import java.util.List;
 /**
  * Endpoints de leitura sobre a ultima coleta.
  *
- * O metodo devolve List<MoedaResposta>, nao List<MoedaAtual>: a assinatura
- * do metodo E a documentacao do contrato. Quem le a classe sabe, sem abrir
- * mais nada, o que sai daqui.
+ * O controller nao conhece mais o repositorio: ele so traduz HTTP para chamada
+ * de metodo e devolve o resultado. Toda decisao sobre COMO obter o dado ficou
+ * do outro lado da fronteira, no MoedaService.
  */
 @RestController
 @RequestMapping("/api/v1/moedas")
 public class MoedaController {
 
-    private final MoedaAtualRepository repository;
+    private final MoedaService service;
 
-    public MoedaController(MoedaAtualRepository repository) {
-        this.repository = repository;
+    public MoedaController(MoedaService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<MoedaResposta> listar() {
-        return repository.findAllByOrderByRankingAsc()
-                .stream()
-                .map(MoedaResposta::de)
-                .toList();
+        return service.listarAtuais();
     }
 }
