@@ -50,6 +50,10 @@ maiúscula vira minúscula, sublinhado vira ponto.
 
 ## Decisões de implementação
 
+O raciocínio completo de cada decisão — contexto, alternativas descartadas com vantagens e
+desvantagens, consequências e referências — está em **[docs/adr/](docs/adr/)**, no formato
+ADR. O resumo abaixo é o índice comentado.
+
 - **A API não é dona do schema.** A tabela `precos_cripto` pertence ao pipeline Python.
   Isso está escrito em dois lugares: `ddl-auto=none`, que proíbe o Hibernate de emitir
   qualquer DDL, e `@Immutable` na entidade, que bloqueia escrita. A alternativa comum,
