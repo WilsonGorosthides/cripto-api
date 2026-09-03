@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Primeira versao, DE PROPOSITO INCOMPLETA.
+ * Endpoints de leitura sobre a ultima coleta.
  *
- * Devolve a entidade direto, sem camada de servico e sem DTO. Serve para ver o
- * JSON que sai daqui - e o que sai vai motivar o proximo bloco.
+ * O metodo devolve List<MoedaResposta>, nao List<MoedaAtual>: a assinatura
+ * do metodo E a documentacao do contrato. Quem le a classe sabe, sem abrir
+ * mais nada, o que sai daqui.
  */
 @RestController
 @RequestMapping("/api/v1/moedas")
@@ -18,15 +19,15 @@ public class MoedaController {
 
     private final MoedaAtualRepository repository;
 
-    // Sem @Autowired: quando a classe tem UM construtor, o Spring o usa
-    // automaticamente para injetar. O campo e final, entao ninguem troca a
-    // dependencia depois de construida.
     public MoedaController(MoedaAtualRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping
-    public List<MoedaAtual> listar() {
-        return repository.findAllByOrderByRankingAsc();
+    public List<MoedaResposta> listar() {
+        return repository.findAllByOrderByRankingAsc()
+                .stream()
+                .map(MoedaResposta::de)
+                .toList();
     }
 }
