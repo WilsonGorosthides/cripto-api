@@ -16,6 +16,8 @@ O formato é o ADR (*Architecture Decision Record*), proposto por Michael Nygard
 | [0005](0005-segredo-por-variavel-de-ambiente.md) | Segredo por variável de ambiente, não em arquivo | aceita |
 | [0006](0006-consulta-na-view-e-nao-em-java.md) | Filtrar a última coleta na view, não em Java | aceita |
 | [0007](0007-maven-em-vez-de-gradle.md) | Maven em vez de Gradle | aceita |
+| [0008](0008-paginacao-por-offset.md) | Paginar o histórico por offset, não por keyset | aceita |
+| [0009](0009-adiar-indices-para-os-acessos-da-api.md) | Adiar a criação de índices para os acessos da API | aceita |
 
 ## Sobre a origem destes registros
 
