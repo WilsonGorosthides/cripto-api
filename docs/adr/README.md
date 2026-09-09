@@ -21,6 +21,7 @@ O formato é o ADR (*Architecture Decision Record*), proposto por Michael Nygard
 | [0010](0010-espelho-do-schema-do-pipeline-em-teste.md) | Espelhar o schema do pipeline num script de teste | aceita |
 | [0011](0011-flyway-apenas-para-as-tabelas-da-api.md) | Flyway gerencia apenas as tabelas da API | aceita |
 | [0012](0012-jwt-assinado-pela-propria-api.md) | Autenticar com JWT emitido e validado pela própria API | aceita |
+| [0013](0013-job-de-alertas-dispara-uma-vez-e-desativa.md) | O job de alertas dispara uma vez por alerta e o desativa | aceita |
 
 ## Sobre a origem destes registros
 
