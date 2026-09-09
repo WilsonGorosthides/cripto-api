@@ -20,6 +20,7 @@ O formato é o ADR (*Architecture Decision Record*), proposto por Michael Nygard
 | [0009](0009-adiar-indices-para-os-acessos-da-api.md) | Adiar a criação de índices para os acessos da API | aceita |
 | [0010](0010-espelho-do-schema-do-pipeline-em-teste.md) | Espelhar o schema do pipeline num script de teste | aceita |
 | [0011](0011-flyway-apenas-para-as-tabelas-da-api.md) | Flyway gerencia apenas as tabelas da API | aceita |
+| [0012](0012-jwt-assinado-pela-propria-api.md) | Autenticar com JWT emitido e validado pela própria API | aceita |
 
 ## Sobre a origem destes registros
 
