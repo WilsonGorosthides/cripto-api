@@ -1,6 +1,7 @@
 package br.com.wilson.criptoapi.moeda;
 
 import br.com.wilson.criptoapi.comum.PaginaResposta;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,15 +47,19 @@ public class MoedaService {
     /**
      * Serie historica de uma moeda, do mais recente para o mais antigo.
      *
-     * ATENCAO - comportamento provisorio: simbolo inexistente devolve pagina
-     * vazia, e o controller responde 200. O correto e 404. Isso e tratado no
-     * proximo bloco, junto com o formato padronizado de erro.
+     * Pagina vazia tem dois significados, e o cliente precisa distingui-los
+     * (ADR 0015): moeda que nunca foi coletada e 404; pagina alem do fim de
+     * uma moeda real e 200 vazio. A verificacao de existencia so roda no caso
+     * raro - pagina vazia - para nao custar uma consulta a mais no caminho comum.
      */
     @Transactional(readOnly = true)
     public PaginaResposta<PontoHistorico> buscarHistorico(String simbolo, Pageable paginacao) {
-        return PaginaResposta.de(
-                precoRepository.findBySimboloIgnoreCaseOrderByColetadoEmDesc(simbolo, paginacao),
-                PontoHistorico::de
-        );
+        Page<Preco> pagina =
+                precoRepository.findBySimboloIgnoreCaseOrderByColetadoEmDesc(simbolo, paginacao);
+
+        if (pagina.isEmpty() && !precoRepository.existsBySimboloIgnoreCase(simbolo)) {
+            throw new MoedaNaoEncontradaException(simbolo);
+        }
+        return PaginaResposta.de(pagina, PontoHistorico::de);
     }
 }
