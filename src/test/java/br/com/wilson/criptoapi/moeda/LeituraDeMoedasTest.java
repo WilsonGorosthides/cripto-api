@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -111,13 +112,24 @@ class LeituraDeMoedasTest {
                 "o IgnoreCase do repositorio deveria tornar isso indiferente");
     }
 
-    /** Documenta o defeito conhecido: deveria ser 404. O bloco 7 resolve. */
+    /**
+     * Ate o ADR 0015 este teste afirmava o comportamento errado (pagina vazia
+     * com 200) para quebrar quando a correcao chegasse. Chegou.
+     */
     @Test
-    void moedaInexistenteDevolvePaginaVaziaEmVezDeErro() {
-        PaginaResposta<PontoHistorico> pagina =
-                service.buscarHistorico("XPTO", PageRequest.of(0, 10));
+    void moedaInexistenteLancaNaoEncontrada() {
+        assertThrows(MoedaNaoEncontradaException.class,
+                () -> service.buscarHistorico("XPTO", PageRequest.of(0, 10)));
+    }
 
-        assertEquals(0, pagina.totalDeItens());
+    /** Pagina alem do fim de uma moeda REAL nao e erro: e uma pagina vazia. */
+    @Test
+    void paginaAlemDoFimDeMoedaRealDevolveVaziaSemErro() {
+        PaginaResposta<PontoHistorico> pagina =
+                service.buscarHistorico("BTC", PageRequest.of(50, 10));
+
+        assertEquals(2, pagina.totalDeItens(), "o total continua o da serie");
         assertTrue(pagina.conteudo().isEmpty());
+        assertTrue(pagina.ultima());
     }
 }
