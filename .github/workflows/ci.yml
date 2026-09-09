@@ -1,0 +1,63 @@
+# CI (docs/adr/0014): a suite roda fora da maquina do autor a cada push e
+# PR; a imagem so e publicada quando a suite passa em main.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      # Mitigacao 2 do ADR 0010: o espelho do schema do pipeline precisa ser
+      # identico a fonte. Remove o cabecalho do espelho e compara byte a byte
+      # com o schema.sql do cripto-pipeline em main. Qualquer diferenca falha.
+      - name: Espelho do schema igual ao do pipeline
+        run: |
+          curl -fsSL \
+            https://raw.githubusercontent.com/WilsonGorosthides/cripto-pipeline/main/schema.sql \
+            -o /tmp/schema-pipeline.sql
+          sed '1,/FIM DO CABECALHO/d' src/test/resources/schema-pipeline.sql \
+            | diff - /tmp/schema-pipeline.sql
+
+      # Testcontainers usa o Docker que ja vem no runner ubuntu-latest.
+      - name: Suite completa
+        run: ./mvnw -B verify
+
+  imagem:
+    needs: testes
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # GHCR aceita o token que o proprio Actions ja tem. Nenhum segredo a
+      # cadastrar - foi um dos motivos de escolher GHCR e nao Docker Hub.
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          # latest para quem so quer rodar; sha para quem quer reproduzir.
+          tags: |
+            ghcr.io/wilsongorosthides/cripto-api:latest
+            ghcr.io/wilsongorosthides/cripto-api:${{ github.sha }}

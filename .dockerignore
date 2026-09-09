@@ -1,0 +1,28 @@
+# O que NAO entra no contexto de build. Tudo que esta aqui e copiado para o
+# daemon antes do build comecar; quanto menos, mais rapido e menor a chance
+# de um segredo ir parar numa camada da imagem.
+
+# Saida de build local: a imagem compila do zero, nao reaproveita o target.
+target/
+
+# Historico e configuracao de ferramentas - irrelevantes para a imagem.
+.git/
+.github/
+.vscode/
+.idea/
+*.iml
+
+# Documentacao: a imagem executa, nao le.
+docs/
+*.md
+
+# Segredos: defesa em profundidade. O .gitignore ja os barra do repositorio;
+# isto os barra do contexto de build mesmo se existirem no disco.
+.env
+*.env
+application-local.properties
+application-*-local.properties
+
+# O proprio compose e o Dockerfile nao precisam estar dentro da imagem.
+docker-compose.yml
+Dockerfile
