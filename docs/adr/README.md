@@ -18,6 +18,12 @@ O formato é o ADR (*Architecture Decision Record*), proposto por Michael Nygard
 | [0007](0007-maven-em-vez-de-gradle.md) | Maven em vez de Gradle | aceita |
 | [0008](0008-paginacao-por-offset.md) | Paginar o histórico por offset, não por keyset | aceita |
 | [0009](0009-adiar-indices-para-os-acessos-da-api.md) | Adiar a criação de índices para os acessos da API | aceita |
+| [0010](0010-espelho-do-schema-do-pipeline-em-teste.md) | Espelhar o schema do pipeline num script de teste | aceita |
+| [0011](0011-flyway-apenas-para-as-tabelas-da-api.md) | Flyway gerencia apenas as tabelas da API | aceita |
+| [0012](0012-jwt-assinado-pela-propria-api.md) | Autenticar com JWT emitido e validado pela própria API | aceita |
+| [0013](0013-job-de-alertas-dispara-uma-vez-e-desativa.md) | O job de alertas dispara uma vez por alerta e o desativa | aceita |
+| [0014](0014-publicar-imagem-e-ci-em-vez-de-vps.md) | Publicar imagem no GHCR com CI, em vez de deploy em VPS | aceita |
+| [0015](0015-erro-no-formato-problem-detail.md) | Responder erro no formato Problem Details (RFC 9457) | aceita |
 
 ## Sobre a origem destes registros
 

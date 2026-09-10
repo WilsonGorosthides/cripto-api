@@ -21,4 +21,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PrecoRepository extends JpaRepository<Preco, Long> {
 
     Page<Preco> findBySimboloIgnoreCaseOrderByColetadoEmDesc(String simbolo, Pageable pageable);
+
+    /**
+     * "Esta moeda ja foi coletada alguma vez?" - so e consultado quando a
+     * pagina vem vazia, para distinguir moeda inexistente (404) de pagina
+     * alem do fim (200 vazio). Ver ADR 0015.
+     */
+    boolean existsBySimboloIgnoreCase(String simbolo);
 }
