@@ -40,12 +40,39 @@ uma vez. Para ser avisado de novo, cria-se outro ([ADR 0013](docs/adr/0013-job-d
 vem do filtro de segurança, antes do MVC, e **não tem corpo**
 ([ADR 0015](docs/adr/0015-erro-no-formato-problem-detail.md)).
 
+## Vendo funcionar
+
+**Leitura pública** — `GET /api/v1/moedas` devolve a coleta mais recente de cada moeda,
+ordenada por ranking. Os valores saem como o banco os guarda: `NUMERIC(24,8)` preservado
+até o JSON, sem notação científica e sem arredondamento
+([ADR 0003](docs/adr/0003-bigdecimal-para-valor-monetario.md)).
+
+![Resposta de GET /api/v1/moedas, com as moedas da última coleta](docs/endpoint-moedas.png)
+
+**Série histórica paginada** — `GET /api/v1/moedas/BTC/historico` devolve os pontos do mais
+recente para o mais antigo, dentro de um envelope próprio, e não do `Page` do Spring Data
+([ADR 0008](docs/adr/0008-paginacao-por-offset.md)).
+
+![Resposta do histórico do BTC, com o envelope de paginação](docs/endpoint-historico.png)
+
+**O ciclo autenticado** — registrar, login, e o mesmo pedido feito duas vezes: com o token
+e sem ele.
+
+![Terminal: registro, login, criação de alerta com token, e 401 sem token](docs/fluxo-autenticado.png)
+
+As duas últimas linhas são o ponto: **a mesma requisição, aceita com o token e recusada sem
+ele**. O `401` sai sem corpo de propósito — ele vem do filtro de segurança, antes do MVC, e
+essa inconsistência está registrada em vez de escondida
+([ADR 0015](docs/adr/0015-erro-no-formato-problem-detail.md)).
+
+O token foi omitido da imagem: é uma credencial, mesmo que expire em uma hora.
+
 ## O que não existe, de propósito
 
 | fora | onde está a razão |
 |---|---|
 | URL pública, HTTPS, VPS | [ADR 0014](docs/adr/0014-publicar-imagem-e-ci-em-vez-de-vps.md) — projeto congelado; link morto é pior que link nenhum |
-| Kubernetes | tirado do escopo pelo autor; entra num projeto com mais de um serviço |
+| Kubernetes | retirado por decisão estratégica; entra num projeto com mais de um serviço |
 | refresh token, revogação de JWT | [ADR 0012](docs/adr/0012-jwt-assinado-pela-propria-api.md) — validade curta no lugar de estado no servidor |
 | notificação do alerta (e-mail, push) | o disparo fica em `alerta_disparos`; entregar é outro sistema |
 | índices para as consultas da API | [ADR 0009](docs/adr/0009-adiar-indices-para-os-acessos-da-api.md) — medido, com limiar de reavaliação |

@@ -8,14 +8,14 @@
 O escopo original fechava o ciclo com "deploy público em HTTPS numa VPS, com Caddy
 terminando TLS". Duas coisas mudaram entre escrever isso e chegar aqui:
 
-1. **O projeto vai ser congelado** ao fim deste ciclo. O autor declarou perda de interesse
-   no domínio e o próximo projeto já está definido. Não haverá manutenção.
-2. **O banco é local.** A API lê o PostgreSQL que o pipeline Python alimenta na máquina do
-   autor. Uma API na VPS precisaria ou de um banco gerenciado (custo e migração do pipeline),
+1. **O projeto vai ser congelado** ao fim deste ciclo. O domínio cripto deixou de me
+   interessar e o próximo projeto já está definido. Não haverá manutenção.
+2. **O banco é local.** A API lê o PostgreSQL que o pipeline Python alimenta na minha
+   máquina. Uma API na VPS precisaria ou de um banco gerenciado (custo e migração do pipeline),
    ou de um túnel para a máquina local (frágil), ou de um segundo banco vazio (API pública
    sem dado).
 
-O que se quer provar com "publicar" é: *a aplicação sai da máquina do autor e roda em
+O que se quer provar com "publicar" é: *a aplicação sai da minha máquina e roda em
 qualquer outra, do mesmo jeito*. Uma URL clicável é **uma** prova disso. Não é a única.
 
 ## Decisão
@@ -26,14 +26,14 @@ Substituir o item "VPS + Caddy + HTTPS" por três entregas que não apodrecem ne
 |---|---|
 | **Dockerfile multi-stage** | a aplicação é construída e executada sem JDK, Maven ou código-fonte na imagem final |
 | **`docker-compose.yml`** com API + PostgreSQL + schema do pipeline aplicado | `docker compose up` numa máquina limpa sobe o sistema inteiro, com a view que a API lê |
-| **GitHub Actions** rodando a suíte a cada push e publicando a imagem no **GHCR** a cada merge em `main` | a suíte passa fora da máquina do autor; a imagem existe num registro público, com `docker run` a um comando de distância |
+| **GitHub Actions** rodando a suíte a cada push e publicando a imagem no **GHCR** a cada merge em `main` | a suíte passa fora da minha máquina; a imagem existe num registro público, com `docker run` a um comando de distância |
 
 O CI também passa a executar a **mitigação 2 do [ADR 0010](0010-espelho-do-schema-do-pipeline-em-teste.md)**:
 baixar o `schema.sql` do `cripto-pipeline` e falhar se o espelho divergir.
 
 O `docker-compose.yml` aplica o espelho do schema do pipeline ao PostgreSQL na primeira
 subida (`/docker-entrypoint-initdb.d/`) e, opcionalmente, um arquivo de dados reais
-exportado do banco do autor, datado e identificado como exportação — não são números
+exportado do meu banco, datado e identificado como exportação — não são números
 inventados.
 
 ## Alternativas consideradas
@@ -64,10 +64,10 @@ escopo.
 **Vantagem:** era o plano original, e Kubernetes está no título das vagas que motivaram
 o projeto.
 
-**Desvantagem:** o próprio autor o tirou do escopo ("Kubernetes agora — fora"). Manifests
-para um cluster que só existe na máquina de quem os escreveu provam menos que um compose
-que qualquer um sobe. Kubernetes entra num projeto que tenha mais de um serviço para
-orquestrar.
+**Desvantagem:** eu o retirei do escopo por decisão estratégica — orçamento de tempo
+finito, e o ciclo a fechar era outro. Manifests para um cluster que só existe na minha
+máquina provam menos que um compose que qualquer um sobe. Kubernetes entra num projeto
+que tenha mais de um serviço para orquestrar.
 
 ### Docker Hub em vez de GHCR
 
