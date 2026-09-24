@@ -6,10 +6,15 @@ API em Spring Boot que serve os dados coletados pelo
 [cripto-pipeline](https://github.com/WilsonGorosthides/cripto-pipeline), e deixa um usuário
 cadastrar alertas de preço que um job avalia contra a coleta mais recente.
 
+> **Concluída no escopo definido.** A coleta do `cripto-pipeline` foi
+> [encerrada em 2026-09-24](https://github.com/WilsonGorosthides/cripto-pipeline#encerramento)
+> depois de 113 coletas em 24 dias. A base continua no lugar e a API continua respondendo
+> sobre ela — o que parou foi a entrada de dado novo.
+
 ```
 CoinGecko ──▶ cripto-pipeline (Python) ──▶ PostgreSQL ──▶ cripto-api (Java) ──▶ HTTP
-                  de hora em hora              │             sob demanda
-                                               └──▶ job de alertas, a cada 5 min
+              113 coletas em 24 dias           │             sob demanda
+                  (encerrado)                  └──▶ job de alertas, a cada 5 min
 ```
 
 Dois repositórios porque são duas unidades de implantação: o pipeline é um job em lote que
@@ -71,7 +76,7 @@ O token foi omitido da imagem: é uma credencial, mesmo que expire em uma hora.
 
 | fora | onde está a razão |
 |---|---|
-| URL pública, HTTPS, VPS | [ADR 0014](docs/adr/0014-publicar-imagem-e-ci-em-vez-de-vps.md) — projeto congelado; link morto é pior que link nenhum |
+| URL pública, HTTPS, VPS | [ADR 0014](docs/adr/0014-publicar-imagem-e-ci-em-vez-de-vps.md) — projeto sem evolução prevista; link vivo que ninguém mantém vira link morto, e isso é pior que link nenhum |
 | Kubernetes | retirado por decisão estratégica; entra num projeto com mais de um serviço |
 | refresh token, revogação de JWT | [ADR 0012](docs/adr/0012-jwt-assinado-pela-propria-api.md) — validade curta no lugar de estado no servidor |
 | notificação do alerta (e-mail, push) | o disparo fica em `alerta_disparos`; entregar é outro sistema |
